@@ -1,7 +1,6 @@
 flask
 flask-cors
 face_recognition
-dlib-binary
 numpy
 Pillow
 gunicorn
