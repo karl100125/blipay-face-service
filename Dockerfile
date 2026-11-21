@@ -1,6 +1,9 @@
 FROM python:3.11-slim
 
-# Mag-install ng mga kailangan para gumana ang dlib at OpenCV
+# LIMITAHAN ANG CPU CORES PARA HINDI MAUBOS ANG RAM
+ENV CMAKE_BUILD_PARALLEL_LEVEL=1
+ENV MAKEFLAGS="-j1"
+
 RUN apt-get update && apt-get install -y \
     build-essential \
     cmake \
@@ -13,15 +16,11 @@ RUN apt-get update && apt-get install -y \
 
 WORKDIR /app
 
-# Kopyahin ang requirements at i-install
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Kopyahin ang app code
 COPY app.py .
 
-# Expose port (Render requirement)
 EXPOSE 10000
 
-# Patakbuhin gamit ang gunicorn
 CMD ["gunicorn", "app:app", "--bind", "0.0.0.0:10000"]
